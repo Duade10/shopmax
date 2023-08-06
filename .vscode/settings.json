@@ -1,0 +1,13 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "flake8": {
+        "max-line-length": 120,
+        "exclude": [
+            "migrations",
+            "settings.py"
+        ]
+    },
+    "black": {
+        "line-length": 120
+    }
+}

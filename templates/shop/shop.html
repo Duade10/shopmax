@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<style>
+    .filter-button {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        padding: 8px 20px;
+        margin-right: 10px;
+    }
+
+    .filter-button:hover,
+    .filter-button:focus {
+        background-color: #0069d9;
+        border-color: #0062cc;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .filter-button:active {
+        background-color: #0062cc;
+        border-color: #005cbf;
+        color: #fff;
+    }
+
+    .filter-button:disabled,
+    .filter-button:disabled:hover,
+    .filter-button:disabled:focus,
+    .filter-button:disabled:active {
+        background-color: #d4d4d4;
+        border-color: #d4d4d4;
+        color: #a7a7a7;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+
+<!-- ##### Breadcumb Area Start ##### -->
+<div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="page-title text-center">
+                    <h2>dresses</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcumb Area End ##### -->
+
+<!-- ##### Shop Grid Area Start ##### -->
+<section class="shop_grid_area section-padding-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+
+
+                <div class="shop_sidebar_area">
+                    <form method="GET" id="filter-form">
+                        <!-- ##### Single Widget ##### -->
+                        <div class="widget category mb-50">
+                            <!-- Widget Title -->
+                            <h6 class="widget-title mb-30">Categories</h6>
+
+                            <!--  Categories  -->
+                            <div class="catagories-menu">
+                                <ul id="menu-content2" class="menu-content collapse show">
+                                    <!-- Single Item -->
+                                    {% for category in categories %}
+                                    <li data-toggle="collapse" data-target="#{{category.slug}}">
+                                        <a class="text-dark" onclick="">{{category.name}}</a>
+                                        <ul class="sub-menu collapse show" id="{{category.slug}}">
+
+                                            {% for sub_category in category.subcategory.all %}
+                                            <li>
+                                                <input type="checkbox" name="subcategory" id="{{sub_category.slug}}"
+                                                    value="{{sub_category.slug}}">
+                                                <label for="{{sub_category.slug}}">{{sub_category.name}}</label>
+                                            </li>
+                                            {% endfor %}
+
+                                        </ul>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- ##### Single Widget ##### -->
+                        <div class="widget brands mb-50">
+                            <!-- Widget Title 2 -->
+                            <p class="widget-title2 mb-30">Brands</p>
+                            <div class="widget-desc">
+                                <ul>
+                                    {% for brand in brands %}
+                                    <li>
+                                        <input type="checkbox" name="brand" id="{{brand.slug}}" value="{{brand.slug}}">
+                                        <label for="{{brand.slug}}">{{brand}}</label>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary filter-button">Filter</button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-8 col-lg-9">
+                <div class="shop_grid_product_area">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="product-topbar d-flex align-items-center justify-content-between">
+                                <!-- Total Products -->
+                                <div class="total-products">
+                                    <p><span id="product-count"></span></p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="product_row"> </div>
+
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="navigation">
+                    <ul class="pagination mt-50 mb-70" id="pagination">
+
+                    </ul>
+                    <!-- <ul class="pagination mt-50 mb-70">
+
+                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">21</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
+                    </ul> -->
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Shop Grid Area End ##### -->
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/shop.js' %}"></script>
+{% endblock js %}

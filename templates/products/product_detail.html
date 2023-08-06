@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- ##### Single Product Details Area Start ##### -->
+<section class="single_product_details_area d-flex align-items-center">
+
+    <!-- Single Product Thumb -->
+    <div class="single_product_thumb clearfix">
+        <div class="product_thumbnail_slides owl-carousel">
+            {% if product.image %}
+            <img src="{{product.image.url}}" alt="{{product.slug}}-image">
+            {% endif %}
+            {% for image in product.images.all %}
+            <img src="{{image.image.url}}" alt="{{product.slug}}-image">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Single Product Description -->
+    <div class="single_product_desc clearfix">
+        <span>{{product.brand}}</span>
+        <a href="cart.html">
+            <h2>{{product.name}}</h2>
+        </a>
+        <p class="product-price">
+            {% if product.discounted_price %}<span class="old-price"> #{{product.discounted_price}}</span>{% endif %}
+            #{{product.price}}</p>
+        <p class="product-desc">{{product.description}}</p>
+
+        <!-- Form -->
+        <form class="cart-form clearfix" id="add-to-cart-form" method="post">
+            <!-- Select Box -->
+            <div class="select-box d-flex mt-50 mb-30">
+                <input type="text" name="product-slug" value="{{product.slug}}" hidden>
+                <select name="select" id="productSize" class="mr-5">
+                    {% for variation in product.variation.size %}
+                    <option value="{{variation.variation_value}}">Size: {{variation.variation_value}}</option>
+                    {% endfor %}
+                </select>
+                <select name="select" id="productColor">
+                    {% for variation in product.variation.colour %}
+                    <option value="{{variation.variation_value}}">Color: {{variation.variation_value}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Cart & Favourite Box -->
+            <div class="cart-fav-box d-flex align-items-center">
+                <!-- Cart -->
+                <button type="submit" name="addtocart" id="add-to-cart-btn" value="5" class="btn essence-btn">Add to
+                    cart</button>
+                <!-- Favourite -->
+                <div class="product-favourite ml-4">
+                    <a href="#" class="favme fa fa-heart"></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- ##### Single Product Details Area End ##### -->
+{% endblock content %}
+{% block js %}
+<script src="{% static 'js/carts.js' %}"></script>
+{% endblock js %}
