@@ -47,3 +47,4 @@ function AddToCart(event) {
 
 const addToCartForm = document.getElementById('add-to-cart-form')
 addToCartForm.addEventListener('submit', AddToCart)
+

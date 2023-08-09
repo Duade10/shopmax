@@ -1,6 +1,6 @@
 from django.contrib.sessions.models import Session
 from rest_framework import response, status, views
-
+from django.db.models import Sum
 from carts import models
 from products import models as product_models
 
@@ -26,9 +26,46 @@ class CartView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class CartData(views.APIView):
+    def get(self, request, extra_data, *args, **kwargs):
+        print(extra_data)
+        extra_data_bool = extra_data.lower()
+        user = request.user
+        if user.is_authenticated:
+            cart_items = models.CartItem.objects.filter(user=user)
+            total_quantity = models.CartItemVariation.objects.filter(cart_item__user=user).aggregate(
+                total_quantity=Sum("quantity")
+            )["total_quantity"]
+            all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
+            sub_total_price = all_product_price * total_quantity
+            tax = (2 * sub_total_price) / 100
+            total_price = sub_total_price + tax
+        else:
+            cart, created = models.Cart.objects.get_or_create(cart_id=get_cart_id(request))
+            cart_items = models.CartItem.objects.filter(cart=cart)
+            total_quantity = models.CartItemVariation.objects.filter(cart_item__cart=cart).aggregate(
+                total_quantity=Sum("quantity")
+            )["total_quantity"]
+            all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
+            sub_total_price = all_product_price * total_quantity
+            tax = (2 * sub_total_price) / 100
+            total_price = sub_total_price + tax
+        serializer = serializers.CartItemSerializer(cart_items, many=True)
+        cart_data = dict(
+            all_product_price=all_product_price,
+            total_product_quantity=total_quantity,
+            tax=tax,
+            sub_total_price=sub_total_price,
+            total_price=total_price,
+        )
+        cart_response = dict(cart_data=cart_data)
+        if extra_data_bool == "true":
+            cart_response = dict(cart_data=cart_data, cart_items=serializer.data)
+        return response.Response(cart_response, status=status.HTTP_200_OK)
+
+
 class AddToCartView(views.APIView):
     def post(self, request, *args, **kwargs):
-        print(request.data)
         user = request.user
         data = request.data
         product_slug = data.get("product-slug")
@@ -49,16 +86,6 @@ class AddToCartView(views.APIView):
             serializer = serializers.CartItemSerializer(cart_item)
 
         else:
-            # try:
-            #     cart_id = request.session.session_key
-            #     cart = models.Cart.objects.get(cart_id=cart_id)
-            # except models.Cart.DoesNotExist:
-            #     cart_id = request.session.create()
-            #     if cart_id is None:
-            #         cart_id = request.session.session_key
-            #         if cart_id is None:
-            #             cart_id = request.session.create()
-            #     cart = models.Cart.objects.create(cart_id=cart_id)
             cart, created = models.Cart.objects.get_or_create(cart_id=get_cart_id(request))
             variation = product_models.Variation.objects.get(product=product, size__iexact=size)
             cart_item, created = models.CartItem.objects.get_or_create(cart=cart, product=product)

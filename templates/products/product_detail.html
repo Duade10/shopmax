@@ -41,8 +41,14 @@
             <!-- Cart & Favourite Box -->
             <div class="cart-fav-box d-flex align-items-center">
                 <!-- Cart -->
-                <button type="submit" name="addtocart" id="add-to-cart-btn" value="5" class="btn essence-btn">Add to
-                    cart</button>
+                {% if add_to_cart_button %}
+                <button type="submit" name="addtocart" id="add-to-cart-btn" value="5" class="btn essence-btn">
+                    Add to cart
+                </button>
+                {% else %}
+                <button class="btn btn-secondary br-0" disabled>Product Variation Unavailable</button>
+                {% endif %}
+
                 <!-- Favourite -->
                 <div class="product-favourite ml-4">
                     <a href="#" class="favme fa fa-heart"></a>
