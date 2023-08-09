@@ -32,14 +32,9 @@
             <!-- Select Box -->
             <div class="select-box d-flex mt-50 mb-30">
                 <input type="text" name="product-slug" value="{{product.slug}}" hidden>
-                <select name="select" id="productSize" class="mr-5">
-                    {% for variation in product.variation.size %}
-                    <option value="{{variation.variation_value}}">Size: {{variation.variation_value}}</option>
-                    {% endfor %}
-                </select>
-                <select name="select" id="productColor">
-                    {% for variation in product.variation.colour %}
-                    <option value="{{variation.variation_value}}">Color: {{variation.variation_value}}</option>
+                <select name="size" id="productSize" class="mr-5">
+                    {% for variation in product.variation.all %}
+                    <option value="{{variation.size}}">Size: {{variation.size}}</option>
                     {% endfor %}
                 </select>
             </div>

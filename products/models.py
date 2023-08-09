@@ -96,29 +96,18 @@ class Image(AbstractTimeStampModel):
         return self.product.name
 
 
-class VariationManager(models.Manager):
-    def colour(self):
-        return super().filter(variation_category="colour")
-
-    def size(self):
-        return super().filter(variation_category="size")
-
-
 class Variation(AbstractTimeStampModel):
-    VARIATION_SIZE = "size"
-    VARIATION_COLOUR = "colour"
-
-    VARIATION_CHOICES = ((VARIATION_SIZE, "Size"), (VARIATION_COLOUR, "Colour"))
-
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variation")
-    variation_category = models.CharField(choices=VARIATION_CHOICES, max_length=7)
-    variation_value = models.CharField(max_length=255)
+    size = models.CharField(max_length=7, blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    objects = VariationManager()
 
     class Meta:
         verbose_name = "Variation"
         verbose_name_plural = "Variations"
 
     def __str__(self):
-        return f"{self.product.name} | {self.variation_category} => {self.variation_value}"
+        return f"{self.product.name} | {self.size}"
+
+    def save(self, *args, **kwargs):
+        self.size = self.size.lower()
+        super().save(*args, **kwargs)

@@ -16,17 +16,18 @@ function getCookie(name) {
 
 function AddToCart(event) {
     event.preventDefault();
+    let formDataDictionary = {}
     const new_event = event
     console.log(new_event)
     const addToCartForm = event.target
     console.log(addToCartForm)
+
     const formData = new FormData(addToCartForm);
-    console.log(formData)
-    var data = JSON.stringify({
-        product_id: 20,
-        action: "Run",
-        value: "Twenty",
-    })
+    for (var pair of formData.entries()) {
+        formDataDictionary[pair[0]] = pair[1];
+    }
+    var data = JSON.stringify(formDataDictionary)
+    console.log(data)
     let csrftoken = getCookie("csrftoken")
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/api/carts/add-to-cart/');
