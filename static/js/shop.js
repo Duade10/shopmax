@@ -9,7 +9,6 @@ const getPage = (number) => {
         url = `${paginationURL}&page=${number}`;
     }
     let formData = null;
-    console.log(url);
     getProducts(url, formData);
 }
 
@@ -20,7 +19,6 @@ const handlePagination = (pagination) => {
         formattedPagination += `<li class="page-item"><a class="page-link" onclick="getPage(${parseInt(pagination.current_page_number) - 1})"><i class="fa fa-angle-left"></i></a></li>`;
     }
     for (i = 0; i <= pagination.number_of_pages; i++) {
-        console.log(parseInt((pagination.current_page_number) - i) - 3);
 
         if (i !== 0) {
 
@@ -86,11 +84,6 @@ function formatShopProducts(product) {
                                 <span class="old-price">#${product.discounted_price}</span>
                                 ${product.price}
                             </p>
-                            <div class="hover-content">
-                                <div class="add-to-cart-btn">
-                                    <a href="#" class="btn essence-btn">Add to Cart</a>
-                                </div>
-                            </div>
                         </div>
                 </div>
             </div> `
@@ -127,7 +120,6 @@ function getProducts(url, formData) {
         data: formData,
         dataType: 'json',
         success: function (response) {
-            console.log(response);
             getSingleProduct(response.products);
             localStorage.setItem("paginationUrl", response.pagination.pagination_url);
             handlePagination(response.pagination);
@@ -155,3 +147,4 @@ $(document).ready(function () {
 
     })
 })
+

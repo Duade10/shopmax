@@ -1,11 +1,9 @@
-import datetime
 from datetime import timedelta
 from django.db import models
 from core.models import AbstractTimeStampModel
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
-# from shortuuidfield import ShortUUIDField
 from django.urls import reverse
 from django.utils import timezone
 
@@ -109,5 +107,5 @@ class Variation(AbstractTimeStampModel):
         return f"{self.product.name} | {self.size}"
 
     def save(self, *args, **kwargs):
-        self.size = self.size.lower()
+        self.size = str(self.size).lower()
         super().save(*args, **kwargs)

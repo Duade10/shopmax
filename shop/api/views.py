@@ -26,7 +26,7 @@ class GetProduct(views.APIView):
             pagination_url = None
             products = Product.objects.all().order_by("-created_at")
 
-        paginator = Paginator(products, 1)
+        paginator = Paginator(products, 9, orphans=2)
 
         page = request.GET.get("page", 1)
         products = paginator.get_page(page)

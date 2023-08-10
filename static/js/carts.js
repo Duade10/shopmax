@@ -18,16 +18,13 @@ function AddToCart(event) {
     event.preventDefault();
     let formDataDictionary = {}
     const new_event = event
-    console.log(new_event)
     const addToCartForm = event.target
-    console.log(addToCartForm)
 
     const formData = new FormData(addToCartForm);
     for (var pair of formData.entries()) {
         formDataDictionary[pair[0]] = pair[1];
     }
     var data = JSON.stringify(formDataDictionary)
-    console.log(data)
     let csrftoken = getCookie("csrftoken")
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/api/carts/add-to-cart/');
@@ -38,8 +35,10 @@ function AddToCart(event) {
     xhr.setRequestHeader("X-CSRFToken", csrftoken)
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            const response = xhr.response
-            console.log(response)
+            const response = xhr.response;
+            getCartData();
+            if (xhr.status === 201) {
+            }
         }
     }
     xhr.send(data)

@@ -100,3 +100,16 @@ class AddToCartView(views.APIView):
                 cart_item.save()
             serializer = serializers.CartItemSerializer(cart_item)
         return response.Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
+class CartVariationData(views.APIView):
+    def get(self, request, *args, **kwargs):
+        # user = request.user
+        # cart_item_variations_list = []
+        # if user.is_authenticated():
+        #     cart_items = models.CartItem.objects.filter(user=user)
+        #     for cart_item in cart_items:
+        #         for item in cart_item.cart_item_variations.all():
+        #             cart_item_variations_list.append(item)
+        #     print(cart_item_variations_list)
+        return response.Response({"done": "Done"})

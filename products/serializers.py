@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product
+from . import models
 
 
 class DiscountPercentageField(serializers.Field):
@@ -32,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
     hover_image_url = HoverImageField(source="*")
 
     class Meta:
-        model = Product
+        model = models.Product
         fields = [
             "id",
             "name",
@@ -54,3 +54,13 @@ class ProductSerializer(serializers.ModelSerializer):
             "hover_image_url",
         ]
         read_only_fields = ["id", "slug", "is_active", "images", "created_at", "updated_at"]
+
+
+class VariationSerializer(serializers.ModelSerializer):
+    # size = serializers.CharField(required=False)
+
+    class Meta:
+        model = models.Variation
+        fields = [
+            "size",
+        ]
