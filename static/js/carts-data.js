@@ -1,13 +1,5 @@
-function variationSizeList(variations) {
-    var variation_list = []
-    for (i = 0; i < variations.length; i++) {
-        variation_list.push(variations[i].size)
-    };
-    return variation_list
-}
-
-
 function formatRightSideBarCartProduct(item, variations) {
+    var sizeHTML = variations.map(variation => ` ${variation.size}`).join(',')
     return `<div class="single-cart-item">
                 <a href="/product/${item.slug}/" class="product-image">
                     <img src="${item.image}" class="cart-thumb" alt="">
@@ -16,7 +8,7 @@ function formatRightSideBarCartProduct(item, variations) {
                         <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                         <span class="badge">${item.brand}</span>
                         <h6>${item.name}</h6>
-                        <p class="size">Size: ${variationSizeList(variations)}</p>
+                        <p class="size"><span>Size: </span>${sizeHTML}</p>
                         <p class="price">#${item.price}</p>
                     </div>
                 </a>
