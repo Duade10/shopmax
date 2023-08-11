@@ -18,7 +18,6 @@ function formatRightSideBarCartProduct(item, variations) {
 function handleRightSideBarCartItemContent(cart_items) {
     var cartList = document.getElementById("cart-list-container")
     var formattedSideBarCartProduct = ""
-    console.log(cart_items.length)
     for (i = 0; i < cart_items.length; i++) {
         var cartProduct = cart_items[i].product
         var cartItemVariation = cart_items[i].cart_item_variation
