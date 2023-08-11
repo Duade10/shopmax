@@ -12,9 +12,11 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartItemVariationSerializer(serializers.ModelSerializer):
+    variation = VariationSerializer()
+
     class Meta:
         model = models.CartItemVariation
-        fields = "__all__"
+        exclude = ["created_at", "updated_at"]
 
 
 class CartItemVariationField(serializers.Field):
@@ -34,8 +36,10 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def get_cart_item_variation(self, obj):
         cart_item_variation_query = obj.cart_item_variations.all()
-        variation_list = []
-        for i in cart_item_variation_query:
-            variation_list.append(i.variation)
-        serializer = VariationSerializer(variation_list, many=True)
+        # variation_list = []
+        # for i in cart_item_variation_query:
+        #     print(i.quantity, i.variation, i.variation.size)
+        #     variation_list.append(i.variation)
+        # serializer = VariationSerializer(variation_list, many=True)
+        serializer = CartItemVariationSerializer(cart_item_variation_query, many=True)
         return serializer.data

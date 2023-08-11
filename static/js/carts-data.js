@@ -1,5 +1,5 @@
-function formatRightSideBarCartProduct(item, variations) {
-    var sizeHTML = variations.map(variation => ` ${variation.size}`).join(',')
+function formatRightSideBarCartProduct(item, cart_item_variation) {
+    var sizeHTML = cart_item_variation.map(crt => ` ${crt.variation.size}`).join(',')
     return `<div class="single-cart-item">
                 <a href="/product/${item.slug}/" class="product-image">
                     <img src="${item.image}" class="cart-thumb" alt="">
@@ -43,6 +43,15 @@ function handleRightSideBarCart(cart_response) {
     grandTotalContainer.innerText = `# ${cart_data.total_price}`;
 }
 
+
+function handleCartTableData(cart_items) {
+
+}
+
+function handleCartPageData(cart_response) {
+
+}
+
 function getCartData() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/carts/get-data/true/");
@@ -56,6 +65,9 @@ function getCartData() {
                 const response = xhr.response
                 console.log(response)
                 handleRightSideBarCart(response)
+                if (location.pathname === '/carts/') {
+                    console.log('carts')
+                }
             }
         }
     }
