@@ -46,20 +46,17 @@ function handleRightSideBarCart(cart_response) {
 
 function formatCartProductVariation(variation) {
     return `
-    <tr>
-        <td class="cart-product-thumbnail"></td>
-        <td class="cart-product-name"></td>
-        <td class="cart-product-variation">
-            ${variation.variation.size}
-        </td>
-        <td class="cart-product-quantity">
-            <input type="number" class="form-control" value="1">
-        </td>
-        <td class="cart-product-total">$49.00</td>
-        <td class="cart-product-action">
-            <button class="btn btn-danger btn-sm">Remove</button>
-        </td>
-    </tr>`;
+        <tr>
+            <td class="product-variation-size">${variation.variation.size}</td>
+            <td class="product-quantity">
+                <div class="input-group">
+                    <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                    <input type="text" class="form-control text-center" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                </div>
+            </td>
+            <td class="product-add-to-cart"><a href="#" class="btn btn-primary height-auto btn-sm">Add</a></td>
+        </tr>`;
 }
 
 function loopAndReturnVariation(variations) {
