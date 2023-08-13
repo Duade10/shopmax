@@ -44,13 +44,74 @@ function handleRightSideBarCart(cart_response) {
 }
 
 
-function handleCartTableData(cart_items) {
+function formatCartProductVariation(variation) {
+    return `
+    <tr>
+        <td class="cart-product-thumbnail"></td>
+        <td class="cart-product-name"></td>
+        <td class="cart-product-variation">
+            ${variation.variation.size}
+        </td>
+        <td class="cart-product-quantity">
+            <input type="number" class="form-control" value="1">
+        </td>
+        <td class="cart-product-total">$49.00</td>
+        <td class="cart-product-action">
+            <button class="btn btn-danger btn-sm">Remove</button>
+        </td>
+    </tr>`;
+}
 
+function loopAndReturnVariation(variations) {
+    if (variations.length > 1) {
+        const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
+        return formattedVariations.join('');
+    } else {
+        return ""
+    }
+}
+
+function formatCartTableRow(item) {
+    let product = item.product;
+    let firstVariation = item.cart_item_variation[0]
+    return `
+    <tr>
+    <td class="cart-product-thumbnail">
+        <img src="${product.image}" alt="Image" class="img-fluid">
+    </td>
+    <td class="cart-product-name">
+        <h2 class="h6 text-black">${product.name}</h2>
+    </td>
+    <td class="cart-product-variation">
+        ${firstVariation.variation.size}
+    </td>
+    <td class="cart-product-quantity">
+        <input type="number" class="form-control" value="1">
+    </td>
+    <td class="cart-product-total">$49.00</td>
+    <td class="cart-product-action">
+        <button class="btn btn-danger btn-sm">Remove</button>
+    </td>
+</tr>
+        ${loopAndReturnVariation(item.cart_item_variation)}
+    `;
+}
+
+function handleCartTableData(cartItems) {
+    const cartTableBody = document.getElementById("cart-product-table-body");
+    const formattedCartTableProducts = cartItems.map(item => formatCartTableRow(item));
+    const formattedCartTable = formattedCartTableProducts.join('');
+    cartTableBody.innerHTML = formattedCartTable; // Set innerHTML once after generating all rows
 }
 
 function handleCartPageData(cart_response) {
-
+    handleCartTableData(cart_response.cart_items);
 }
+
+// // Example usage:
+// const cartResponse = /* your cart response data */;
+// handleCartPageData(cartResponse);
+
 
 function getCartData() {
     const xhr = new XMLHttpRequest();
@@ -63,10 +124,9 @@ function getCartData() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = xhr.response
-                console.log(response)
                 handleRightSideBarCart(response)
                 if (location.pathname === '/carts/') {
-                    console.log('carts')
+                    handleCartPageData(response)
                 }
             }
         }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>eCommerce Cart</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .quantity {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quantity input {
+            width: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>eCommerce Cart</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody id="cart-body">
+            <!-- Cart items will be added here dynamically using JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Sample cart data
+        const cartItems = [
+            { product: "T-Shirt", variations: [{ size: "Small", quantity: 2 }, { size: "Medium", quantity: 1 }] },
+            { product: "Jeans", variations: [{ size: "30", quantity: 1 }, { size: "32", quantity: 2 }] },
+            { product: "Shoes", variations: [{ size: "9", quantity: 3 }] },
+        ];
+
+        // Function to populate the cart table
+        function populateCartTable() {
+            const cartBody = document.getElementById("cart-body");
+
+            for (const item of cartItems) {
+                for (const variation of item.variations) {
+                    const row = document.createElement("tr");
+                    const productCell = document.createElement("td");
+                    const sizeCell = document.createElement("td");
+                    const quantityCell = document.createElement("td");
+
+                    productCell.textContent = item.product;
+                    sizeCell.textContent = variation.size;
+
+                    const quantityDiv = document.createElement("div");
+                    quantityDiv.className = "quantity";
+
+                    const decreaseBtn = document.createElement("button");
+                    decreaseBtn.textContent = "-";
+                    decreaseBtn.addEventListener("click", () => decreaseQuantity(quantityInput));
+
+                    const quantityInput = document.createElement("input");
+                    quantityInput.type = "number";
+                    quantityInput.value = variation.quantity;
+
+                    const increaseBtn = document.createElement("button");
+                    increaseBtn.textContent = "+";
+                    increaseBtn.addEventListener("click", () => increaseQuantity(quantityInput));
+
+                    quantityDiv.appendChild(decreaseBtn);
+                    quantityDiv.appendChild(quantityInput);
+                    quantityDiv.appendChild(increaseBtn);
+
+                    quantityCell.appendChild(quantityDiv);
+
+                    row.appendChild(productCell);
+                    row.appendChild(sizeCell);
+                    row.appendChild(quantityCell);
+
+                    cartBody.appendChild(row);
+                }
+            }
+        }
+
+        // Function to decrease quantity
+        function decreaseQuantity(input) {
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Function to increase quantity
+        function increaseQuantity(input) {
+            input.value = parseInt(input.value) + 1;
+        }
+
+        // Call the function to populate the cart table
+        populateCartTable();
+    </script>
+
+</body>
+
+</html>
