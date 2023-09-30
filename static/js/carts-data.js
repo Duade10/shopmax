@@ -46,51 +46,58 @@ function handleRightSideBarCart(cart_response) {
 
 function formatCartProductVariation(variation) {
     return `
-        <tr>
-            <td class="product-variation-size">${variation.variation.size}</td>
-            <td class="product-quantity">
-                <div class="input-group">
-                    <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                    <input type="text" class="form-control text-center" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                    <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                </div>
-            </td>
-            <td class="product-add-to-cart"><a href="#" class="btn btn-primary height-auto btn-sm">Add</a></td>
-        </tr>`;
+    <tr class="Variation-table-row">
+    <td>${variation.variation.size}</td>
+    <td>
+        <div class="input-group">
+            <button class="btn btn-outline-primary js-btn-minus"
+                type="button">
+                &minus;
+            </button>
+            <input type="text" class="form-control text-center" value="${variation.quantity}"
+                placeholder="" aria-label="Example text with button addon"
+                aria-describedby="button-addon1">
+            <button class="btn btn-outline-primary js-btn-plus"
+                type="button">
+                &plus;
+            </button>
+        </div>
+    </td>
+</tr>`;
 }
 
 function loopAndReturnVariation(variations) {
-    if (variations.length > 1) {
-        const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
-        return formattedVariations.join('');
-    } else {
-        return ""
-    }
+    const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
+    return formattedVariations.join('');
+
 }
 
 function formatCartTableRow(item) {
+    console.log(item)
     let product = item.product;
-    let firstVariation = item.cart_item_variation[0]
     return `
     <tr>
-    <td class="cart-product-thumbnail">
-        <img src="${product.image}" alt="Image" class="img-fluid">
-    </td>
-    <td class="cart-product-name">
+    <th class="cart-product-thumbnail"><img style="width:80px;" src="${product.image}" class="img-fluid" alt=""></th>
+    <th class="cart-product-name">
         <h2 class="h6 text-black">${product.name}</h2>
-    </td>
-    <td class="cart-product-variation">
-        ${firstVariation.variation.size}
-    </td>
-    <td class="cart-product-quantity">
-        <input type="number" class="form-control" value="1">
-    </td>
+    </th>
     <td class="cart-product-total">$49.00</td>
-    <td class="cart-product-action">
-        <button class="btn btn-danger btn-sm">Remove</button>
+    <td class="cart-product-total">$49.00</td>
+    <td class="cart-product-total">$490000.00</td>
+    <td class="cart-product-variation text-center">
+        <table class="table Variation-table">
+            <thead>
+                <tr>
+                    <th>Size</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            ${loopAndReturnVariation(item.cart_item_variation)}
+            </tbody>
+        </table>
     </td>
 </tr>
-        ${loopAndReturnVariation(item.cart_item_variation)}
     `;
 }
 
