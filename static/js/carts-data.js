@@ -73,7 +73,6 @@ function loopAndReturnVariation(variations) {
 }
 
 function formatCartTableRow(item) {
-    console.log(item)
     let product = item.product;
     return `
     <tr>
@@ -139,3 +138,25 @@ function getCartData() {
 }
 
 getCartData();
+
+
+
+function getTestData() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/carts/test/");
+    xhr.responseType = "json"
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.onload = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const response = xhr.response
+                console.log(response)
+            }
+        }
+    }
+    xhr.send()
+}
+
+getTestData()
