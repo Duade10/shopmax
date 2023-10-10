@@ -28,7 +28,6 @@ class CartView(views.APIView):
 
 class CartData(views.APIView):
     def get(self, request, extra_data, *args, **kwargs):
-        print(extra_data)
         extra_data_bool = extra_data.lower()
         user = request.user
         if user.is_authenticated:
@@ -58,6 +57,7 @@ class CartData(views.APIView):
             sub_total_price=sub_total_price,
             total_price=total_price,
         )
+        print(cart_data)
         cart_response = dict(cart_data=cart_data)
         if extra_data_bool == "true":
             cart_response = dict(cart_data=cart_data, cart_items=serializer.data)
@@ -100,6 +100,10 @@ class AddToCartView(views.APIView):
                 cart_item.save()
             serializer = serializers.CartItemSerializer(cart_item)
         return response.Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
+class CartObject(views.APIView):
+    pass
 
 
 class CartVariationData(views.APIView):

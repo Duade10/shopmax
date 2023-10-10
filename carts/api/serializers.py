@@ -43,3 +43,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         # serializer = VariationSerializer(variation_list, many=True)
         serializer = CartItemVariationSerializer(cart_item_variation_query, many=True)
         return serializer.data
+
+
+class CartObjectSerializer(serializers.ModelSerializer):
+    pass
