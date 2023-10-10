@@ -3,6 +3,7 @@ from rest_framework import serializers
 from carts import models
 from products.models import Variation
 from products.serializers import ProductSerializer, VariationSerializer
+from django.db.models import Sum
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -62,19 +63,21 @@ class CartObjectSerializer(serializers.ModelSerializer):
         ]
 
     def get_sub_total(self, obj):
-        quantity = 0
-        cart_item_variations = models.CartItemVariation.objects.filter(cart_item=obj)
-        for i in cart_item_variations.all():
-            quantity += i.quantity
-        sub_total = obj.product.price * quantity
+        sub_total = models.CartItemVariation.objects.filter(cart_item=obj).aggregate(sub_total=Sum("quantity"))[
+            "sub_total"
+        ]
+        if sub_total is None:
+            sub_total = 0
+        sub_total *= obj.product.price
         return sub_total
 
     def get_total_quantity(self, obj):
-        quantity = 0
-        cart_item_variations = models.CartItemVariation.objects.filter(cart_item=obj)
-        for i in cart_item_variations.all():
-            quantity += i.quantity
-        return quantity
+        total_quantity = models.CartItemVariation.objects.filter(cart_item=obj).aggregate(
+            total_quantity=Sum("quantity")
+        )["total_quantity"]
+        if total_quantity is None:
+            total_quantity = 0
+        return total_quantity
 
     def get_cart_item_variations(self, obj):
         cart_item_variations = models.CartItemVariation.objects.filter(cart_item=obj)
