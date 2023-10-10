@@ -47,6 +47,8 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartObjectSerializer(serializers.ModelSerializer):
     sub_total = serializers.SerializerMethodField()
+    total_quantity = serializers.SerializerMethodField()
+    cart_item_variations = serializers.SerializerMethodField()
 
     class Meta:
         model = models.CartItem
@@ -56,6 +58,7 @@ class CartObjectSerializer(serializers.ModelSerializer):
             "product",
             "total_quantity",
             "sub_total",
+            "cart_item_variations",
         ]
 
     def get_sub_total(self, obj):
@@ -65,3 +68,15 @@ class CartObjectSerializer(serializers.ModelSerializer):
             quantity += i.quantity
         sub_total = obj.product.price * quantity
         return sub_total
+
+    def get_total_quantity(self, obj):
+        quantity = 0
+        cart_item_variations = models.CartItemVariation.objects.filter(cart_item=obj)
+        for i in cart_item_variations.all():
+            quantity += i.quantity
+        return quantity
+
+    def get_cart_item_variations(self, obj):
+        cart_item_variations = models.CartItemVariation.objects.filter(cart_item=obj)
+        serializer = CartItemVariationSerializer(cart_item_variations, many=True)
+        return serializer.data
