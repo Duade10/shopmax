@@ -15,15 +15,6 @@ class CartItem(AbstractTimeStampModel):
     product = models.ForeignKey(
         "products.Product", related_name="cart_items", on_delete=models.CASCADE, blank=True, null=True
     )
-    total_quantity = models.IntegerField(default=0, blank=True, null=True)
-
-    def sub_total(self):
-        return self.product.price * self.quantity
-
-    def update_total_quantity(self):
-        total_quantity = self.cart_item_variations.aggregate(total_quantity=models.Sum("quantity"))["total_quantity"]
-        self.total_quantity = total_quantity or 0
-        self.save()
 
     def __str__(self):
         return f"{self.product} | {self.pk}"

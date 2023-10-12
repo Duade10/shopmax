@@ -26,9 +26,8 @@ class CartView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CartData(views.APIView):
-    def get(self, request, extra_data, *args, **kwargs):
-        extra_data_bool = extra_data.lower()
+class ContextData(views.APIView):
+    def get(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated:
             cart_items = models.CartItem.objects.filter(user=user)
@@ -49,7 +48,7 @@ class CartData(views.APIView):
             sub_total_price = all_product_price * total_quantity
             tax = (2 * sub_total_price) / 100
             total_price = sub_total_price + tax
-        serializer = serializers.CartItemSerializer(cart_items, many=True)
+        serializer = serializers.CartObjectSerializer(cart_items, many=True)
         cart_data = dict(
             all_product_price=all_product_price,
             total_product_quantity=total_quantity,
@@ -57,10 +56,7 @@ class CartData(views.APIView):
             sub_total_price=sub_total_price,
             total_price=total_price,
         )
-        print(cart_data)
-        cart_response = dict(cart_data=cart_data)
-        if extra_data_bool == "true":
-            cart_response = dict(cart_data=cart_data, cart_items=serializer.data)
+        cart_response = dict(cart_data=cart_data, cart_items=serializer.data)
         return response.Response(cart_response, status=status.HTTP_200_OK)
 
 

@@ -33,7 +33,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CartItem
-        fields = ["cart", "user", "product", "total_quantity", "cart_item_variation"]
+        fields = ["cart", "user", "product", "cart_item_variation"]
 
     def get_cart_item_variation(self, obj):
         cart_item_variation_query = obj.cart_item_variations.all()
@@ -68,7 +68,7 @@ class CartObjectSerializer(serializers.ModelSerializer):
             "sub_total"
         ]
         if sub_total is None:
-            sub_total = 0
+            sub_total = 0.0
         sub_total *= obj.product.price
         return sub_total
 

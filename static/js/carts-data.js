@@ -44,81 +44,14 @@ function handleRightSideBarCart(cart_response) {
 }
 
 
-function formatCartProductVariation(variation) {
-    return `
-    <tr class="Variation-table-row">
-    <td>${variation.variation.size}</td>
-    <td>
-        <div class="input-group">
-            <button class="btn btn-outline-primary js-btn-minus"
-                type="button">
-                &minus;
-            </button>
-            <input type="text" class="form-control text-center" value="${variation.quantity}"
-                placeholder="" aria-label="Example text with button addon"
-                aria-describedby="button-addon1">
-            <button class="btn btn-outline-primary js-btn-plus"
-                type="button">
-                &plus;
-            </button>
-        </div>
-    </td>
-</tr>`;
-}
-
-function loopAndReturnVariation(variations) {
-    const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
-    return formattedVariations.join('');
-
-}
-
-function formatCartTableRow(item) {
-    let product = item.product;
-    return `
-    <tr>
-    <th class="cart-product-thumbnail"><img style="width:80px;" src="${product.image}" class="img-fluid" alt=""></th>
-    <th class="cart-product-name">
-        <h2 class="h6 text-black">${product.name}</h2>
-    </th>
-    <td class="cart-product-total">$49.00</td>
-    <td class="cart-product-total">$49.00</td>
-    <td class="cart-product-total">$490000.00</td>
-    <td class="cart-product-variation text-center">
-        <table class="table Variation-table">
-            <thead>
-                <tr>
-                    <th>Size</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            ${loopAndReturnVariation(item.cart_item_variation)}
-            </tbody>
-        </table>
-    </td>
-</tr>
-    `;
-}
-
-function handleCartTableData(cartItems) {
-    const cartTableBody = document.getElementById("cart-product-table-body");
-    const formattedCartTableProducts = cartItems.map(item => formatCartTableRow(item));
-    const formattedCartTable = formattedCartTableProducts.join('');
-    cartTableBody.innerHTML = formattedCartTable; // Set innerHTML once after generating all rows
-}
-
-function handleCartPageData(cart_response) {
-    handleCartTableData(cart_response.cart_items);
-}
-
 // // Example usage:
 // const cartResponse = /* your cart response data */;
 // handleCartPageData(cartResponse);
 
 
-function getCartData() {
+function getContextData() {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/carts/get-data/true/");
+    xhr.open("GET", "/api/carts/context-data/");
     xhr.responseType = "json"
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
@@ -128,35 +61,11 @@ function getCartData() {
             if (xhr.status === 200) {
                 const response = xhr.response
                 handleRightSideBarCart(response)
-                if (location.pathname === '/carts/') {
-                    handleCartPageData(response)
-                }
             }
         }
     }
     xhr.send()
 }
 
-getCartData();
+getContextData();
 
-
-
-function getTestData() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/carts/test/");
-    xhr.responseType = "json"
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
-    xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.onload = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                const response = xhr.response
-                console.log(response)
-            }
-        }
-    }
-    xhr.send()
-}
-
-getTestData()
