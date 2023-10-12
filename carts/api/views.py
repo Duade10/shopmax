@@ -117,15 +117,6 @@ class AddToCartView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
 
-class CartObject(views.APIView):
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        if user.is_authenticated:
-            cart_item = models.CartItem.objects.filter(user=user)
-            serializer = serializers.CartObjectSerializer(cart_item, many=True)
-            return response.Response(data=serializer.data)
-
-
 class CartVariationData(views.APIView):
     def get(self, request, *args, **kwargs):
         # user = request.user

@@ -50,6 +50,7 @@ class CartObjectSerializer(serializers.ModelSerializer):
     sub_total = serializers.SerializerMethodField()
     total_quantity = serializers.SerializerMethodField()
     cart_item_variations = serializers.SerializerMethodField()
+    product = ProductSerializer()
 
     class Meta:
         model = models.CartItem
