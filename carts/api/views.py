@@ -64,6 +64,21 @@ class CartData(views.APIView):
         return response.Response(cart_response, status=status.HTTP_200_OK)
 
 
+class CartItemsListView(views.APIView):
+    def get(self, request, *arg, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            cart_items = models.CartItem.objects.filter(user=user)
+            serializer = serializers.CartObjectSerializer(cart_items, many=True)
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            cart_id = get_cart_id(request)
+            cart, created = models.Cart.objects.filter(cart=cart_id)
+            cart_items = models.CartItem.objects.filter(cart=cart)
+            serializer = serializer.CartObjectSerializer(cart_items, many=True)
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class AddToCartView(views.APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
