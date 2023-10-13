@@ -47,10 +47,9 @@ function getCookie(name) {
 // const addToCartForm = document.getElementById('add-to-cart-form')
 // addToCartForm.addEventListener('submit', AddToCart)
 
-function decreaseCartQuantity(variation_id) {
-    console.log("decreaseCartQuantity: ", variation_id)
+function updateCartQuantity(variation_id, action) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `/api/carts/decrease-quantity/${variation_id}/`);
+    xhr.open("GET", `/api/carts/${action}-quantity/${variation_id}/`);
     xhr.responseType = "json"
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
@@ -79,8 +78,7 @@ function formatCartProductVariation(variation) {
                 <input type="text" class="form-control text-center" value="${variation.quantity}"
                     placeholder="" aria-label="Example text with button addon"
                     aria-describedby="button-addon1">
-                <button class="btn btn-outline-primary js-btn-plus"
-                    type="button">
+                <button class="btn btn-outline-primary js-btn-plus" data-action="increase" data-variation-id="${variation.id}" type="button">
                     &plus;
                 </button>
             </div>
@@ -93,7 +91,10 @@ cartBody.addEventListener('click', (e) => {
     if (e.target.tagName === "BUTTON") {
         if (e.target.getAttribute("data-action") === "decrease") {
             const variationId = e.target.getAttribute("data-variation-id")
-            decreaseCartQuantity(variationId)
+            updateCartQuantity(variationId, "decrease")
+        } else if (e.target.getAttribute("data-action") === "increase") {
+            const variationId = e.target.getAttribute("data-variation-id")
+            updateCartQuantity(variationId, "increase")
         }
     }
 })
