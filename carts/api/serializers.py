@@ -68,8 +68,8 @@ class CartObjectSerializer(serializers.ModelSerializer):
             "sub_total"
         ]
         if sub_total is None:
-            sub_total = 0.0
-        sub_total *= obj.product.price
+            sub_total = 0
+        sub_total *= float(obj.product.price)
         return sub_total
 
     def get_total_quantity(self, obj):

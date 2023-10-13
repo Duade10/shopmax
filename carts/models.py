@@ -1,5 +1,6 @@
 from django.db import models
 from core.models import AbstractTimeStampModel
+from django.db.models import Sum
 
 
 class Cart(AbstractTimeStampModel):
@@ -15,6 +16,14 @@ class CartItem(AbstractTimeStampModel):
     product = models.ForeignKey(
         "products.Product", related_name="cart_items", on_delete=models.CASCADE, blank=True, null=True
     )
+
+    def get_total_quantity(self):
+        total_quantity = CartItemVariation.objects.filter(cart_item=self).aggregate(total_quantity=Sum("quantity"))[
+            "total_quantity"
+        ]
+        if total_quantity is None:
+            total_quantity = 0
+        return total_quantity
 
     def __str__(self):
         return f"{self.product} | {self.pk}"

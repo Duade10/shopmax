@@ -49,6 +49,22 @@ function getCookie(name) {
 
 function decreaseCartQuantity(variation_id) {
     console.log("decreaseCartQuantity: ", variation_id)
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `/api/carts/decrease-quantity/${variation_id}/`);
+    xhr.responseType = "json"
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.onload = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const response = xhr.response;
+                handleCartTableData(response)
+                getContextData()
+            }
+        }
+    }
+    xhr.send()
 }
 
 function formatCartProductVariation(variation) {

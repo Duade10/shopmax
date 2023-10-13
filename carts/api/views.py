@@ -72,9 +72,27 @@ class CartItemsListView(views.APIView):
 
 class DecreaseCartView(views.APIView):
     def get(self, request, variation_id, *args, **kwargs):
+        user = request.user
         variation = models.CartItemVariation.objects.get(id=variation_id)
         variation.quantity -= 1
-        variation.save()
+        if variation.quantity <= 0:
+            variation.delete()
+        else:
+            variation.save()
+        cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
+        total_quantity = cart_item.get_total_quantity()
+        if total_quantity <= 0:
+            cart_item.delete()
+        if user.is_authenticated:
+            cart_items = models.CartItem.objects.filter(user=user)
+            serializer = serializers.CartObjectSerializer(cart_items, many=True)
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            cart_id = get_cart_id(request)
+            cart, created = models.Cart.objects.filter(cart=cart_id)
+            cart_items = models.CartItem.objects.filter(cart=cart)
+            serializer = serializer.CartObjectSerializer(cart_items, many=True)
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
         return response.Response({"message": "variation decreased"}, status=status.HTTP_200_OK)
 
 
