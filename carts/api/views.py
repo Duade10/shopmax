@@ -34,29 +34,24 @@ class ContextData(views.APIView):
             total_quantity = models.CartItemVariation.objects.filter(cart_item__user=user).aggregate(
                 total_quantity=Sum("quantity")
             )["total_quantity"]
-            all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
-            sub_total_price = all_product_price * total_quantity
-            tax = (2 * sub_total_price) / 100
-            total_price = sub_total_price + tax
         else:
             cart, created = models.Cart.objects.get_or_create(cart_id=get_cart_id(request))
             cart_items = models.CartItem.objects.filter(cart=cart)
             total_quantity = models.CartItemVariation.objects.filter(cart_item__cart=cart).aggregate(
                 total_quantity=Sum("quantity")
             )["total_quantity"]
-            all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
-            sub_total_price = all_product_price * total_quantity
-            tax = (2 * sub_total_price) / 100
-            total_price = sub_total_price + tax
+        all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
+        sub_total = all_product_price * total_quantity
+        tax = round((2 * sub_total) / 100, 2)
+        grand_total = sub_total + tax
         serializer = serializers.CartObjectSerializer(cart_items, many=True)
-        cart_data = dict(
-            all_product_price=all_product_price,
-            total_product_quantity=total_quantity,
+        context_data = dict(
+            total_quantity=total_quantity,
             tax=tax,
-            sub_total_price=sub_total_price,
-            total_price=total_price,
+            sub_total=round(sub_total, 2),
+            grand_total=round(grand_total, 2),
         )
-        cart_response = dict(cart_data=cart_data, cart_items=serializer.data)
+        cart_response = dict(context_data=context_data, cart_items=serializer.data)
         return response.Response(cart_response, status=status.HTTP_200_OK)
 
 
@@ -73,6 +68,14 @@ class CartItemsListView(views.APIView):
             cart_items = models.CartItem.objects.filter(cart=cart)
             serializer = serializer.CartObjectSerializer(cart_items, many=True)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DecreaseCartView(views.APIView):
+    def get(self, request, variation_id, *args, **kwargs):
+        variation = models.CartItemVariation.objects.get(id=variation_id)
+        variation.quantity -= 1
+        variation.save()
+        return response.Response({"message": "variation decreased"}, status=status.HTTP_200_OK)
 
 
 class AddToCartView(views.APIView):

@@ -47,27 +47,40 @@ function getCookie(name) {
 // const addToCartForm = document.getElementById('add-to-cart-form')
 // addToCartForm.addEventListener('submit', AddToCart)
 
+function decreaseCartQuantity(variation_id) {
+    console.log("decreaseCartQuantity: ", variation_id)
+}
+
 function formatCartProductVariation(variation) {
     return `
     <tr class="Variation-table-row">
     <td>${variation.variation.size}</td>
-    <td>
-        <div class="input-group">
-            <button class="btn btn-outline-primary js-btn-minus"
-                type="button">
-                &minus;
-            </button>
-            <input type="text" class="form-control text-center" value="${variation.quantity}"
-                placeholder="" aria-label="Example text with button addon"
-                aria-describedby="button-addon1">
-            <button class="btn btn-outline-primary js-btn-plus"
-                type="button">
-                &plus;
-            </button>
-        </div>
-    </td>
-</tr>`;
+        <td>
+            <div class="input-group">
+                <button class="btn btn-outline-primary js-btn-minus" data-action="decrease" data-variation-id="${variation.id}" type="button">
+                    &minus;
+                </button>
+                <input type="text" class="form-control text-center" value="${variation.quantity}"
+                    placeholder="" aria-label="Example text with button addon"
+                    aria-describedby="button-addon1">
+                <button class="btn btn-outline-primary js-btn-plus"
+                    type="button">
+                    &plus;
+                </button>
+            </div>
+        </td>
+    </tr>`;
 }
+
+const cartBody = document.getElementById("cart-product-table-body");
+cartBody.addEventListener('click', (e) => {
+    if (e.target.tagName === "BUTTON") {
+        if (e.target.getAttribute("data-action") === "decrease") {
+            const variationId = e.target.getAttribute("data-variation-id")
+            decreaseCartQuantity(variationId)
+        }
+    }
+})
 
 function loopAndReturnVariation(variations) {
     const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
@@ -109,6 +122,7 @@ function handleCartTableData(cartItems) {
     const formattedCartTable = formattedCartTableProducts.join('');
     cartTableBody.innerHTML = formattedCartTable;
 }
+
 
 
 function getCartData() {

@@ -20,27 +20,27 @@ function handleRightSideBarCartItemContent(cart_items) {
     var formattedSideBarCartProduct = ""
     for (i = 0; i < cart_items.length; i++) {
         var cartProduct = cart_items[i].product
-        var cartItemVariation = cart_items[i].cart_item_variation
+        var cartItemVariation = cart_items[i].cart_item_variations
         var currentItem = formatRightSideBarCartProduct(cartProduct, cartItemVariation)
         formattedSideBarCartProduct += currentItem
         cartList.innerHTML = formattedSideBarCartProduct
     }
 }
 
-function handleRightSideBarCart(cart_response) {
-    const cart_data = cart_response.cart_data;
-    const cart_items = cart_response.cart_items;
+function handleRightSideBarCart(data) {
+    const context_data = data.context_data;
+    const cart_items = data.cart_items;
     handleRightSideBarCartItemContent(cart_items);
     var totalProductCountMainHTML = document.getElementById("total-product-count-main-container");
     var totalProductCountMinHTML = document.getElementById("total-product-count-min-container");
     var subTotalContainer = document.getElementById("summary-table-sub_total");
     var taxContainer = document.getElementById("summary-table-tax");
     var grandTotalContainer = document.getElementById("summary-table-total");
-    totalProductCountMainHTML.innerText = cart_data.total_product_quantity;
-    totalProductCountMinHTML.innerText = cart_data.total_product_quantity;
-    subTotalContainer.innerText = `# ${cart_data.sub_total_price}`;
-    taxContainer.innerText = `# ${cart_data.tax}`;
-    grandTotalContainer.innerText = `# ${cart_data.total_price}`;
+    totalProductCountMainHTML.innerText = context_data.total_quantity;
+    totalProductCountMinHTML.innerText = context_data.total_quantity;
+    subTotalContainer.innerText = `# ${context_data.sub_total}`;
+    taxContainer.innerText = `# ${context_data.tax}`;
+    grandTotalContainer.innerText = `# ${context_data.grand_total}`;
 }
 
 
