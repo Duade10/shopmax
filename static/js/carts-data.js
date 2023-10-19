@@ -14,34 +14,43 @@ function getCookie(name) {
 }
 
 function formatRightSideBarCartProduct(item, cart_item_variation, cartItemId) {
-    var sizeHTML = cart_item_variation.map(crt => ` ${crt.variation.size}`).join(',')
-    return `<div class="single-cart-item">
-                <a class="product-image">
-                    <img src="${item.image}" class="cart-thumb" alt="">
-                    <!-- Cart Item Desc -->
-                    <div class="cart-item-desc">
-                        <span style="cursor:pointer;" class="product-remove"><i data-product-id="${cartItemId}" class="fa fa-close product-remove" aria-hidden="true"></i></span>
-                        <span class="badge">${item.brand}</span>
-                        <h6 style="cursor:pointer;" class="product-name" data-product-slug="${item.slug}">${item.name}</h6>
-                        <p class="size"><span>Size: </span>${sizeHTML}</p>
-                        <p class="price">#${item.price}</p>
-                    </div>
-                </a>
-            </div>`
+    var sizeHTML = cart_item_variation.map(crt => ` ${crt.variation.size}`).join(',');
+
+    return `
+        <div class="single-cart-item">
+            <a class="product-image">
+                <img src="${item.image}" class="cart-thumb" alt="">
+                <!-- Cart Item Desc -->
+                <div class="cart-item-desc">
+                    <span style="cursor:pointer;" class="product-remove">
+                        <i data-product-id="${cartItemId}" class="fa fa-close product-remove" aria-hidden="true"></i>
+                    </span>
+                    <span class="badge">${item.brand}</span>
+                    <h6 style="cursor:pointer;" class="product-name" data-product-slug="${item.slug}">${item.name}</h6>
+                    <p class="size"><span>Size: </span>${sizeHTML}</p>
+                    <p class="price">#${item.price}</p>
+                </div>
+            </a>
+        </div>
+    `;
 }
 
+
 function handleRightSideBarCartItemContent(cart_items) {
-    var cartList = document.getElementById("cart-list-container")
-    var formattedSideBarCartProduct = ""
+    var cartList = document.getElementById("cart-list-container");
+    var formattedSideBarCartProduct = "";
+
     for (i = 0; i < cart_items.length; i++) {
         var cartItemId = cart_items[i].id;
         var cartProduct = cart_items[i].product;
         var cartItemVariation = cart_items[i].cart_item_variations;
         var currentItem = formatRightSideBarCartProduct(cartProduct, cartItemVariation, cartItemId);
         formattedSideBarCartProduct += currentItem;
-        cartList.innerHTML = formattedSideBarCartProduct;
     }
+
+    cartList.innerHTML = formattedSideBarCartProduct;
 }
+
 
 function handleRightSideBarCart(data) {
     const context_data = data.context_data;
@@ -84,6 +93,9 @@ function deleteCartItem(productId) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 handleRightSideBarCart(xhr.response)
+                if (window.location.pathname === '/carts/') {
+                    getCartData();
+                }
             }
         }
     }
@@ -106,8 +118,8 @@ function getContextData() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = xhr.response
-                console.log(response);
                 handleRightSideBarCart(response)
+
             }
         }
     }
