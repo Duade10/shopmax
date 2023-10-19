@@ -16,6 +16,7 @@
     <link rel="icon" href="{% static 'img/core-img/favicon.ico' %}">
 
     <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/toastr.css' %}">
     <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
@@ -255,7 +256,10 @@
     <script src="{% static 'js/classy-nav.min.js' %}"></script>
     <!-- Active js -->
     <script src="{% static 'js/active.js' %}"></script>
+    <!-- Toastr js -->
+    <script src="{% static 'js/toastr.min.js' %}"></script>
     <script>
+        toastr.info('Are you the 6 fingered man?')
         sub_category = document.getElementById('category-container')
         sub_category = sub_category.addEventListener('click', function (e) {
             var subcategory_slug = `subcategory=${e.target.id}`
