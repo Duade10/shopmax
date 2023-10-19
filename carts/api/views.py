@@ -1,8 +1,9 @@
 from django.contrib.sessions.models import Session
-from rest_framework import response, status, views
+from rest_framework import response, status, views, generics
 from django.db.models import Sum
 from carts import models
 from products import models as product_models
+from django.shortcuts import get_object_or_404
 
 from . import serializers
 
@@ -41,9 +42,14 @@ class ContextData(views.APIView):
                 total_quantity=Sum("quantity")
             )["total_quantity"]
         all_product_price = cart_items.aggregate(total_price=Sum("product__price"))["total_price"]
-        sub_total = all_product_price * total_quantity
-        tax = round((2 * sub_total) / 100, 2)
-        grand_total = sub_total + tax
+        try:
+            sub_total = all_product_price * total_quantity
+            tax = round((2 * sub_total) / 100, 2)
+            grand_total = sub_total + tax
+        except TypeError:
+            sub_total = 0.0
+            tax = 0.0
+            grand_total = 0.0
         serializer = serializers.CartObjectSerializer(cart_items, many=True)
         context_data = dict(
             total_quantity=total_quantity,
@@ -120,6 +126,24 @@ class IncreaseCartView(views.APIView):
             serializer = serializer.CartObjectSerializer(cart_items, many=True)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         return response.Response({"message": "variation quantity increased"}, status=status.HTTP_200_OK)
+
+
+class DeleteCartItemView(views.APIView):
+    def delete(self, request, cart_id, *args, **kwargs):
+        user = request.user
+        try:
+            cart_item = get_object_or_404(models.CartItem, id=cart_id)
+            if user.is_authenticated:
+                if cart_item.user == user:
+                    cart_item.delete()
+                    return ContextData().get(request)
+                else:
+                    return response.Response({"error": "Permission not granted"}, status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                cart_item.delete()
+                return response.Response({"message": "Cart item deleted"}, status=status.HTTP_204_NO_CONTENT)
+        except models.CartItem.DoesNotExist:
+            return response.Response({"message": "Object does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class AddToCartView(views.APIView):
