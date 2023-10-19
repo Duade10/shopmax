@@ -8,6 +8,7 @@ function AddToCart(event) {
     }
     var data = JSON.stringify(formDataDictionary)
     let csrftoken = getCookie("csrftoken")
+    toastr.info('Adding to cart')
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/api/carts/add-to-cart/');
     xhr.responseType = "json"
@@ -17,6 +18,7 @@ function AddToCart(event) {
     xhr.setRequestHeader("X-CSRFToken", csrftoken)
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
+            toastr.success('Added successfully')
             getContextData();
             if (xhr.status === 201) {
             }

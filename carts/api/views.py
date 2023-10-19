@@ -165,7 +165,7 @@ class AddToCartView(views.APIView):
                 cart_item = models.CartItemVariation.objects.create(cart_item=cart_item, variation=variation)
                 cart_item.quantity = 1
                 cart_item.save()
-            serializer = serializers.CartItemSerializer(cart_item)
+            serializer = serializers.CartObjectSerializer(cart_item)
 
         else:
             cart, created = models.Cart.objects.get_or_create(cart_id=get_cart_id(request))
@@ -180,8 +180,8 @@ class AddToCartView(views.APIView):
                 cart_item = models.CartItemVariation.objects.create(cart_item=cart_item, variation=variation)
                 cart_item.quantity = 1
                 cart_item.save()
-            serializer = serializers.CartItemSerializer(cart_item)
-        return response.Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            serializer = serializers.CartObjectSerializer(cart_item)
+        return response.Response({"message": "Added to cart"}, status=status.HTTP_202_ACCEPTED)
 
 
 class CartVariationData(views.APIView):

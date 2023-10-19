@@ -259,7 +259,6 @@
     <!-- Toastr js -->
     <script src="{% static 'js/toastr.min.js' %}"></script>
     <script>
-        toastr.info('Are you the 6 fingered man?')
         sub_category = document.getElementById('category-container')
         sub_category = sub_category.addEventListener('click', function (e) {
             var subcategory_slug = `subcategory=${e.target.id}`
