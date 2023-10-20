@@ -18,7 +18,8 @@ function AddToCart(event) {
     xhr.setRequestHeader("X-CSRFToken", csrftoken)
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            toastr.success('Added successfully')
+            toastr.clear();
+            toastr.success('Added successfully');
             getContextData();
             if (xhr.status === 201) {
             }

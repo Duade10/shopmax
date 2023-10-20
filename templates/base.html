@@ -137,9 +137,12 @@
 
                 <h2>Summary</h2>
                 <ul class="summary-table" id="summary-table">
-                    <li><span>subtotal:</span> <span id="summary-table-sub_total"></span></li>
-                    <li><span>tax:</span> <span id="summary-table-tax"></span></li>
-                    <li><span>total:</span> <span id="summary-table-total"></span></li>
+                    <li><span>subtotal:</span></span></li>
+                    <li><span id="summary-table-sub_total"></span></li>
+                    <li><span>tax:</span></li>
+                    <li><span id="summary-table-tax"></span></li>
+                    <li><span>total:</span></li>
+                    <li><span id="summary-table-total"></span></li>
                 </ul>
                 <div class="checkout-btn mt-100">
                     <a href="checkout.html" class="btn essence-btn">check out</a>
@@ -265,6 +268,10 @@
             subcategory_data = localStorage.setItem("shop-button-data", subcategory_slug)
             location.assign('/shop/')
         })
+        toastr.options = {
+            closeButton: true,
+            timeOut: 500
+        };
     </script>
     {% block js %}
 

@@ -17,6 +17,7 @@ function getCookie(name) {
 
 
 function updateCartQuantity(variation_id, action) {
+    toastr.info("Updating cart quantity");
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `/api/carts/${action}-quantity/${variation_id}/`);
     xhr.responseType = "json"
@@ -27,6 +28,8 @@ function updateCartQuantity(variation_id, action) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = xhr.response;
+                toastr.clear();
+                toastr.success("Cart quantity updated successfully");
                 handleCartTableData(response)
                 getContextData()
             }
