@@ -15,6 +15,26 @@ def get_cart_id(request):
     return cart
 
 
+def get_cart_items(user, request):
+    user = request.user
+
+    if user.is_authenticated:
+        cart_items = models.CartItem.objects.filter(user=user)
+
+    else:
+        cart_id = get_cart_id(request)
+
+        try:
+            cart = models.Cart.objects.get(cart_id=cart_id)
+            cart_items = models.CartItem.objects.filter(cart=cart)
+
+        except models.Cart.DoesNotExist:
+            cart = models.Cart.objects.create(cart_id=cart_id)
+            cart_items = []
+
+    return cart_items
+
+
 class CartView(views.APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -75,84 +95,102 @@ class ContextData(views.APIView):
 
 
 class CartItemsListView(views.APIView):
-    def get(self, request, *arg, **kwargs):
+    def get(self, request, *args, **kwargs):
         user = request.user
-        if user.is_authenticated:
-            cart_items = models.CartItem.objects.filter(user=user)
-            serializer = serializers.CartObjectSerializer(cart_items, many=True)
-
-            return response.Response(serializer.data, status=status.HTTP_200_OK)
-
-        else:
-            cart_id = get_cart_id(request)
-            cart, created = models.Cart.objects.filter(cart=cart_id)
-            cart_items = models.CartItem.objects.filter(cart=cart)
-            serializer = serializer.CartObjectSerializer(cart_items, many=True)
-
-            return response.Response(serializer.data, status=status.HTTP_200_OK)
+        cart_items = get_cart_items(user, request)
+        serializer = serializers.CartObjectSerializer(cart_items, many=True)
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class DecreaseCartView(views.APIView):
     def get(self, request, variation_id, *args, **kwargs):
         user = request.user
+        try:
+            variation = models.CartItemVariation.objects.get(id=variation_id)
+            cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
+            if user.is_authenticated:
+                if cart_item.user != user:
+                    return response.Response({"error": "Unauthorized request"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        variation = models.CartItemVariation.objects.get(id=variation_id)
-        variation.quantity -= 1
+            variation.quantity -= 1
 
-        if variation.quantity <= 0:
-            variation.delete()
-        else:
-            variation.save()
+            if variation.quantity <= 0:
+                variation.delete()
+            else:
+                variation.save()
 
-        cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
-        total_quantity = cart_item.get_total_quantity()
+            total_quantity = cart_item.get_total_quantity()
 
-        if total_quantity <= 0:
-            cart_item.delete()
+            if total_quantity <= 0:
+                cart_item.delete()
 
-        return CartItemsListView().get(request)
+            cart_items = get_cart_items(user, request)
+            serializer = serializers.CartObjectSerializer(cart_items, many=True)
+
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return response.Response({"error": f"an error occurred ({e})"}, status=status.HTTP_403_FORBIDDEN)
 
 
 class IncreaseCartView(views.APIView):
     def get(self, request, variation_id, *args, **kwargs):
         user = request.user
+        try:
+            variation = models.CartItemVariation.objects.get(id=variation_id)
+            cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
+            if user.is_authenticated:
+                if cart_item.user != user:
+                    return response.Response({"error": "Unauthorized request"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        variation = models.CartItemVariation.objects.get(id=variation_id)
-        variation.quantity += 1
-
-        if variation.quantity <= 0:
-            variation.delete()
-        else:
+            variation.quantity += 1
             variation.save()
 
-        cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
-        total_quantity = cart_item.get_total_quantity()
+            total_quantity = cart_item.get_total_quantity()
 
-        if total_quantity <= 0:
-            cart_item.delete()
+            if total_quantity <= 0:
+                cart_item.delete()
 
-        if user.is_authenticated:
-            cart_items = models.CartItem.objects.filter(user=user)
+            cart_items = get_cart_items(user, request)
             serializer = serializers.CartObjectSerializer(cart_items, many=True)
+
             return response.Response(serializer.data, status=status.HTTP_200_OK)
 
-        else:
-            cart_id = get_cart_id(request)
-            cart, created = models.Cart.objects.filter(cart=cart_id)
-            cart_items = models.CartItem.objects.filter(cart=cart)
+        except Exception as e:
+            return response.Response({"error": f"an error occurred ({e})"}, status=status.HTTP_403_FORBIDDEN)
 
-            serializer = serializer.CartObjectSerializer(cart_items, many=True)
+
+class UpdateCartView(views.APIView):
+    def put(self, request, variation_id, *arg, **kwargs):
+        user = request.user
+        value = request.data.get("value", "")
+
+        try:
+            variation = models.CartItemVariation.objects.get(id=variation_id)
+            cart_item = models.CartItem.objects.get(id=variation.cart_item.id)
+            if user.is_authenticated:
+                if cart_item.user != user:
+                    return response.Response({"error": "Unauthorized request"}, status=status.HTTP_401_UNAUTHORIZED)
+
+            variation.quantity = value
+            variation.save()
+
+            if variation.quantity == 0:
+                variation.delete()
+
+            total_quantity = cart_item.get_total_quantity()
+
+            if total_quantity <= 0:
+                cart_item.delete()
+
+            cart_items = get_cart_items(user, request)
+            serializer = serializers.CartObjectSerializer(cart_items, many=True)
+
             return response.Response(serializer.data, status=status.HTTP_200_OK)
 
-        return response.Response({"message": "variation quantity increased"}, status=status.HTTP_200_OK)
-
-
-# class UpdateCartView(views.APIView):
-#     def put(self, request, cart_id, *arg, **kwargs):
-#         user = request.user
-#         value = request.get("value")
-#         try:
-#             cart_item = get_object_or_404(models.CartItem, id=cart_id)
+        except Exception as e:
+            print(e)
+            return response.Response({"error": f"an error occurred ({e})"}, status=status.HTTP_403_FORBIDDEN)
 
 
 class DeleteCartItemView(views.APIView):

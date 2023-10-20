@@ -16,7 +16,7 @@ function getCookie(name) {
 
 
 
-function updateCartQuantity(variation_id, action) {
+function incrementOrDecrementCartQuantity(variation_id, action) {
     toastr.info("Updating cart quantity");
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `/api/carts/${action}-quantity/${variation_id}/`);
@@ -37,6 +37,32 @@ function updateCartQuantity(variation_id, action) {
         }
     }
     xhr.send()
+}
+
+
+function updateCartQuantity(variation_id, value) {
+    toastr.info("Updating cart quantity");
+    let csrftoken = getCookie('csrftoken')
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", `/api/carts/update-quantity/${variation_id}/`);
+    xhr.responseType = "json";
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+    var data = JSON.stringify({ "value": value })
+    xhr.onload = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            toastr.clear();
+            if (xhr.status === 200) {
+                toastr.success('Cart quantity updated successfully');
+                const response = xhr.response;
+                handleCartTableData(response);
+                getContextData();
+            }
+        }
+    }
+    xhr.send(data)
 }
 
 function formatCartProductVariation(variation) {
@@ -64,20 +90,21 @@ cartBody.addEventListener('click', (e) => {
     if (e.target.tagName === "BUTTON") {
         if (e.target.getAttribute("data-action") === "decrease") {
             const variationId = e.target.getAttribute("data-variation-id")
-            updateCartQuantity(variationId, "decrease")
+            incrementOrDecrementCartQuantity(variationId, "decrease")
         } else if (e.target.getAttribute("data-action") === "increase") {
             const variationId = e.target.getAttribute("data-variation-id")
-            updateCartQuantity(variationId, "increase")
+            incrementOrDecrementCartQuantity(variationId, "increase")
         }
     }
 })
-// cartBody.addEventListener('input', (e) => {
-//     if (e.target.tagName === "INPUT") {
-//         const variationInput = document.getElementById("variation-input");
-//         let value = variationInput.value
-
-//     }
-// })
+cartBody.addEventListener("change", (e) => {
+    if (e.target.tagName === "INPUT") {
+        const variationInput = document.getElementById("variation-input");
+        const variationId = e.target.getAttribute("data-variation-id");
+        const value = variationInput.value;
+        updateCartQuantity(variationId, value);
+    }
+})
 
 function loopAndReturnVariation(variations) {
     const formattedVariations = variations.map(variation => formatCartProductVariation(variation));
