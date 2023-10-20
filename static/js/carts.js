@@ -28,6 +28,7 @@ function updateCartQuantity(variation_id, action) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const response = xhr.response;
+                console.log(response);
                 toastr.clear();
                 toastr.success("Cart quantity updated successfully");
                 handleCartTableData(response)
@@ -47,8 +48,8 @@ function formatCartProductVariation(variation) {
                 <button class="btn btn-outline-primary js-btn-minus" data-action="decrease" data-variation-id="${variation.id}" type="button">
                     &minus;
                 </button>
-                <input type="text" class="form-control text-center" value="${variation.quantity}"
-                    placeholder="" aria-label="Example text with button addon"
+                <input type="text" id="variation-input" data-variation-id="${variation.id}" class="form-control text-center" value="${variation.quantity}"
+                    aria-label="Example text with button addon"
                     aria-describedby="button-addon1">
                 <button class="btn btn-outline-primary js-btn-plus" data-action="increase" data-variation-id="${variation.id}" type="button">
                     &plus;
@@ -70,6 +71,13 @@ cartBody.addEventListener('click', (e) => {
         }
     }
 })
+// cartBody.addEventListener('input', (e) => {
+//     if (e.target.tagName === "INPUT") {
+//         const variationInput = document.getElementById("variation-input");
+//         let value = variationInput.value
+
+//     }
+// })
 
 function loopAndReturnVariation(variations) {
     const formattedVariations = variations.map(variation => formatCartProductVariation(variation));

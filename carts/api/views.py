@@ -110,20 +110,7 @@ class DecreaseCartView(views.APIView):
         if total_quantity <= 0:
             cart_item.delete()
 
-        if user.is_authenticated:
-            cart_items = models.CartItem.objects.filter(user=user)
-            serializer = serializers.CartObjectSerializer(cart_items, many=True)
-            return response.Response(serializer.data, status=status.HTTP_200_OK)
-
-        else:
-            cart_id = get_cart_id(request)
-            cart, created = models.Cart.objects.filter(cart=cart_id)
-            cart_items = models.CartItem.objects.filter(cart=cart)
-
-            serializer = serializer.CartObjectSerializer(cart_items, many=True)
-            return response.Response(serializer.data, status=status.HTTP_200_OK)
-
-        return response.Response({"message": "variation quantity decreased"}, status=status.HTTP_200_OK)
+        return CartItemsListView().get(request)
 
 
 class IncreaseCartView(views.APIView):
@@ -158,6 +145,14 @@ class IncreaseCartView(views.APIView):
             return response.Response(serializer.data, status=status.HTTP_200_OK)
 
         return response.Response({"message": "variation quantity increased"}, status=status.HTTP_200_OK)
+
+
+# class UpdateCartView(views.APIView):
+#     def put(self, request, cart_id, *arg, **kwargs):
+#         user = request.user
+#         value = request.get("value")
+#         try:
+#             cart_item = get_object_or_404(models.CartItem, id=cart_id)
 
 
 class DeleteCartItemView(views.APIView):
