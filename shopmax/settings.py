@@ -50,6 +50,7 @@ CUSTOM_APPS = [
     "products.apps.ProductsConfig",
     "categories.apps.CategoriesConfig",
     "carts.apps.CartsConfig",
+    "wishlists.apps.WishlistsConfig",
 ]
 
 THIRDPARTY_APPS = ["rest_framework"]
