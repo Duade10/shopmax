@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from . import models
+from wishlists.models import Wishlist
 
 
 class DiscountPercentageField(serializers.Field):
@@ -30,6 +31,7 @@ class ProductSerializer(serializers.ModelSerializer):
     brand = serializers.StringRelatedField()
     discounted_percentage = DiscountPercentageField(source="*")
     hover_image_url = HoverImageField(source="*")
+    is_in_wishlist = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Product
@@ -52,8 +54,19 @@ class ProductSerializer(serializers.ModelSerializer):
             "updated_at",
             "discounted_percentage",
             "hover_image_url",
+            "is_in_wishlist",
         ]
         read_only_fields = ["id", "slug", "is_active", "images", "created_at", "updated_at"]
+
+    def get_is_in_wishlist(self, obj):
+        request = self.context.get("request")
+        if request.user.is_authenticated:
+            try:
+                wishlist = Wishlist.objects.filter(user=request.user, products=obj)
+                if wishlist.exists():
+                    return True
+            except Wishlist.DoesNotExist:
+                return False
 
 
 class VariationSerializer(serializers.ModelSerializer):

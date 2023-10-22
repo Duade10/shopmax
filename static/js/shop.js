@@ -64,6 +64,8 @@ function isNew(product) {
     }
 }
 function formatShopProducts(product) {
+    const isInWishlist = (input) => (input === true ? 'active' : '');
+    var value = isInWishlist(product.is_in_wishlist);
     return `<div div class="col-12 col-sm-6 col-lg-4" >
             <div class="single-product-wrapper">
                 <div class="product-img">
@@ -72,7 +74,7 @@ function formatShopProducts(product) {
                         <img class="hover-img" src="${product.hover_image_url}" alt="">
                             ${isNew(product)}
                             <div class="product-favourite">
-                                <a href="#" class="favme fa fa-heart"></a>
+                                <a href="#" class="favme fa fa-heart ${value}"></a>
                             </div>
                         </div>
                         <div class="product-description">

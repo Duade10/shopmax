@@ -30,7 +30,7 @@ class GetProduct(views.APIView):
 
         page = request.GET.get("page", 1)
         products = paginator.get_page(page)
-        serializer = ProductSerializer(products.object_list, many=True)
+        serializer = ProductSerializer(products.object_list, context={"request": request}, many=True)
         pagination = {
             "pagination_url": pagination_url,
             "number_of_pages": paginator.num_pages,

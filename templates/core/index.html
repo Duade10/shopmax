@@ -117,7 +117,8 @@
                             {% endif %}
                             <!-- Favourite -->
                             <div class="product-favourite">
-                                <a href="#" class="favme fa fa-heart"></a>
+                                <a href="#"
+                                    class="favme fa fa-heart {% if product in wishlist.products.all %}active{% endif %}"></a>
                             </div>
                         </div>
                         <!-- Product Description -->
