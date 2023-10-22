@@ -81,6 +81,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "categories.context_processors.categories",
+                "wishlists.context_processors.wishlist_context_processor",
             ],
         },
     },
