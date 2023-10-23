@@ -117,7 +117,7 @@
                             {% endif %}
                             <!-- Favourite -->
                             <div class="product-favourite">
-                                <a href="#"
+                                <a href="#" id="wishlist-heart" data-product-id="{{product.id}}"
                                     class="favme fa fa-heart {% if product in wishlist.products.all %}active{% endif %}"></a>
                             </div>
                         </div>
@@ -176,4 +176,18 @@
 {% endblock content %}
 {% block js %}
 <script src="{% static 'js/context-data.js' %}"></script>
+<script>
+    function handleWishlistToggle(event) {
+        const clickedElement = event.target;
+        if (clickedElement.classList.contains("favme")) {
+            const productId = clickedElement.getAttribute("data-product-id");
+            toastr.info("Checking wishlist");
+            toggleWishlist(productId);
+        }
+    }
+
+    const featuredProductSlides = document.querySelector(".popular-products-slides");
+    featuredProductSlides.addEventListener("click", handleWishlistToggle);
+
+</script>
 {% endblock js %}
