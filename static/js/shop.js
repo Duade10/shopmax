@@ -74,7 +74,7 @@ function formatShopProducts(product) {
                         <img class="hover-img" src="${product.hover_image_url}" alt="">
                             ${isNew(product)}
                             <div class="product-favourite">
-                                <a href="#" class="favme fa fa-heart ${value}"></a>
+                                <a data-product-id="${product.id}" class="favme fa fa-heart ${value}"></a>
                             </div>
                         </div>
                         <div class="product-description">
@@ -112,6 +112,21 @@ function getSingleProduct(data) {
     }
 
 }
+
+function handleWishlistToggle(event) {
+    const clickedElement = event.target;
+    if (clickedElement.classList.contains("favme")) {
+        const productId = clickedElement.getAttribute("data-product-id");
+        toastr.info("Checking wishlist");
+        toggleWishlist(productId);
+        clickedElement.classList.toggle("active");
+
+    }
+}
+
+const productRow = document.getElementById("product_row");
+productRow.addEventListener("click", handleWishlistToggle);
+
 
 
 
