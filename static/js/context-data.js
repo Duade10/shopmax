@@ -106,6 +106,24 @@ function deleteCartItem(productId) {
 // const cartResponse = /* your cart response data */;
 // handleCartPageData(cartResponse);
 
+function toggleWishlist(product_id) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.setRequestHeader("X_Requested-With", "XMLHttpRequest");
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.onload = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const response = xhr.response
+                console.log(response);
+
+            }
+        }
+    }
+
+}
+
 
 function getContextData() {
     const xhr = new XMLHttpRequest();

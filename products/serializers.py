@@ -60,13 +60,16 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_is_in_wishlist(self, obj):
         request = self.context.get("request")
-        if request.user.is_authenticated:
-            try:
-                wishlist = Wishlist.objects.filter(user=request.user, products=obj)
-                if wishlist.exists():
-                    return True
-            except Wishlist.DoesNotExist:
-                return False
+        try:
+            if request.user.is_authenticated:
+                try:
+                    wishlist = Wishlist.objects.filter(user=request.user, products=obj)
+                    if wishlist.exists():
+                        return True
+                except Wishlist.DoesNotExist:
+                    return False
+        except AttributeError:
+            return False
 
 
 class VariationSerializer(serializers.ModelSerializer):

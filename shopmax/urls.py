@@ -30,6 +30,7 @@ urlpatterns = [
 urlpatterns += [
     path("api/shop/", include("shop.api.urls", namespace="shop_api")),
     path("api/carts/", include("carts.api.urls", namespace="carts_api")),
+    path("api/wishlist/", include("wishlists.api.urls", namespace="wishlist_api")),
 ]
 
 
