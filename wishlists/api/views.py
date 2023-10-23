@@ -7,7 +7,8 @@ from rest_framework import status
 
 class ToggleWishlistView(APIView):
     def get(self, request, product_id, *args, **kwargs):
-        if request.user.is_authenticated:
+        user = request.user
+        if user.is_authenticated:
             try:
                 wishlist = models.Wishlist.objects.get(user=user)
             except models.Wishlist.DoesNotExist:
@@ -18,10 +19,13 @@ class ToggleWishlistView(APIView):
             if product in wishlist.products.all():
                 wishlist.products.remove(product)
                 data = {"message": "product removed from wishlist"}
+                request_status = status.HTTP_200_OK
+
             else:
                 wishlist.products.add(product)
-                data = {"message": "product added from wishlist"}
+                data = {"message": "product added to wishlist"}
+                request_status = status.HTTP_201_CREATED
 
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=request_status)
 
         return Response({"message": "login required"}, status=status.HTTP_403_FORBIDDEN)

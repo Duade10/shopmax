@@ -4,5 +4,5 @@ from . import views
 app_name = "wishlist_api"
 
 urlpatterns = [
-    path("toggle/", views.ToggleWishlistView.as_view()),
+    path("toggle/<int:product_id>/", views.ToggleWishlistView.as_view()),
 ]

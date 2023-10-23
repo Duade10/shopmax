@@ -108,19 +108,26 @@ function deleteCartItem(productId) {
 
 function toggleWishlist(product_id) {
     const xhr = new XMLHttpRequest();
+    xhr.open("GET", `/api/wishlist/toggle/${product_id}/`);
     xhr.responseType = "json";
-    xhr.setRequestHeader("X_Requested-With", "XMLHttpRequest");
-    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
+            if (xhr.status === 201) {
                 const response = xhr.response
-                console.log(response);
+                let message = response.message
+                toastr.success(message)
 
+            } else if (xhr.status === 200) {
+                const response = xhr.response
+                let message = response.message
+                toastr.warning(message)
             }
         }
     }
+    xhr.send();
 
 }
 

@@ -28,6 +28,14 @@ function AddToCart(event) {
     xhr.send(data)
 }
 
+
+const wishlistHeart = document.getElementById("wishlist-heart");
+wishlistHeart.addEventListener("click", (e) => {
+    var productId = e.target.getAttribute("data-product-id");
+    toastr.info("Checking wishlist");
+    toggleWishlist(productId);
+});
+
 const addToCartForm = document.getElementById('add-to-cart-form')
 addToCartForm.addEventListener('submit', (e) => {
     e.preventDefault();
