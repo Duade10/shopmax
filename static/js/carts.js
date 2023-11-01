@@ -144,7 +144,11 @@ function handleCartTableData(cartItems) {
     const cartTableBody = document.getElementById("cart-product-table-body");
     const formattedCartTableProducts = cartItems.map(item => formatCartTableRow(item));
     const formattedCartTable = formattedCartTableProducts.join('');
-    cartTableBody.innerHTML = formattedCartTable;
+    if (formattedCartTable === '') {
+        cartTableBody.innerHTML = '<h2 class="text-center m-5">You do not have any product in the cart!</h2>'
+    } else {
+        cartTableBody.innerHTML = formattedCartTable;
+    }
 }
 
 
