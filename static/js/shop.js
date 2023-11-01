@@ -148,19 +148,18 @@ function getProducts(url, formData) {
 $(document).ready(function () {
     let url = '/api/shop/get-products/';
     let formData = null;
-    in_wishlist_data = localStorage.getItem("in-wishlist-data");
-    subcategory_data = localStorage.getItem('shop-button-data')
+    inWishlistData = localStorage.getItem("in-wishlist-data");
+    subcategory_data = localStorage.getItem('shop-button-data');
     if (subcategory_data != null) {
-        formData = subcategory_data
+        formData = subcategory_data;
         localStorage.removeItem('shop-button-data');
-    } else if ()
-        getProducts(url, formData);
+    }
+    getProducts(url, formData);
 
     $('#filter-form').submit(function (event) {
         event.preventDefault();
         var formData = $(this).serialize();
         let url = '/api/shop/get-products/';
-        console.log(formData);
         getProducts(url, formData);
 
     })

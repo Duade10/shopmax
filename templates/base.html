@@ -88,17 +88,6 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
-                <!-- Search Area -->
-                <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </form>
-                </div>
-                <!-- Favourite Area -->
-                <div class="favourite-area">
-                    <a id="favourite-area"><img src="{% static 'img/core-img/heart.svg' %}" alt=""></a>
-                </div>
                 <!-- User Login Info -->
                 <div class="user-login-info">
                     <a href="#"><img src="{% static 'img/core-img/user.svg' %}" alt=""></a>
@@ -264,13 +253,8 @@
     <script>
         sub_category = document.getElementById('category-container')
         sub_category = sub_category.addEventListener('click', function (e) {
-            var subcategory_slug = `subcategory=${e.target.id}`
+            var subcategory_slug = `subcategory=${e.target.id}`;
             subcategory_data = localStorage.setItem("shop-button-data", subcategory_slug);
-            location.assign('/shop/');
-        })
-        in_wishlist = document.getElementById("favourite-area");
-        in_wishlist = in_wishlist.addEventListener('click', function (e) {
-            in_wishlist_data = localStorage.setItem("in-wishlist-data", "true");
             location.assign('/shop/');
         })
         toastr.options = {
