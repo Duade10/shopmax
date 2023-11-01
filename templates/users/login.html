@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- ##### Breadcumb Area Start ##### -->
+<div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="page-title text-center">
+                    <h2>Login</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcumb Area End ##### -->
+
+<!-- ##### Login Form Start ##### -->
+<div class="login-form section-padding-80">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <div class="login-form mt-50 clearfix">
+                    <div class="cart-page-heading mb-30">
+                        <h5>Login</h5>
+                    </div>
+                    <form action="#" method="post">
+                        <div class="mb-3">
+                            <label for="username">Username or Email <span>*</span></label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password">Password <span>*</span></label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="custom-control custom-checkbox d-block mb-3">
+                            <input type="checkbox" class="custom-control-input" id="rememberMe" name="rememberMe">
+                            <label class="custom-control-label" for="rememberMe">Remember Me</label>
+                        </div>
+                        <button type="submit" class="btn essence-btn">Login</button>
+                        <p class="mt-3"><a href="#">Forgot your password?</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Login Form End ##### -->
+
+
+{% endblock content %}

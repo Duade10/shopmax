@@ -66,18 +66,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/shop/">Shop</a></li>
-                                    <li><a href="single-product-details.html">Product Details</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="single-blog.html">Single Blog</a></li>
-                                    <li><a href="regular-page.html">Regular Page</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                </ul>
-                            </li>
+
                             <li><a href="blog.html">Blog</a></li>
                             <li><a href="contact.html">Contact</a></li>
                         </ul>
@@ -90,7 +79,11 @@
             <div class="header-meta d-flex clearfix justify-content-end">
                 <!-- User Login Info -->
                 <div class="user-login-info">
-                    <a href="#"><img src="{% static 'img/core-img/user.svg' %}" alt=""></a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'users:logout' %}"><img src="{% static 'img/core-img/user.svg' %}" alt="">Logout</a>
+                    {% else %}
+                    <a href="{% url 'users:login' %}"><img src="{% static 'img/core-img/user.svg' %}" alt="">Login</a>
+                    {% endif %}
                 </div>
                 <!-- Cart Area -->
                 <div class="cart-area">

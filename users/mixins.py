@@ -19,7 +19,7 @@ class LoggedOutOnlyView(UserPassesTestMixin):
             url = self.request.META.get("HTTP_REFERER")
             return redirect(url)
         except TypeError:
-            url = "core:home"
+            url = "core:index"
             return redirect(url)
 
 
@@ -35,5 +35,5 @@ class CorrectUserOnlyView(UserPassesTestMixin):
             url = self.request.META.get("HTTP_REFERER")
             return redirect(url)
         except TypeError:
-            url = "core:home"
+            url = "core:index"
             return redirect(url)
